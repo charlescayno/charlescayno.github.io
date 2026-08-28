@@ -1,58 +1,23 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InnoMux2 Simulator - Design Summary</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- KaTeX for math rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
-            onload="renderMathInElement(document.body);"></script>
+            onload="renderMathInElement(document.body, {delimiters: [{left: '', right: '', display: true}, {left: '$', right: '$', display: false}]});"></script>
     <style>
-        body {
-            background-color: #f8fafc;
-            color: #1e293b;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        .mathcad-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            background: white;
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            border-left: 8px solid #0f172a;
-        }
-        .equation-block {
-            background: #f1f5f9;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border: 1px solid #e2e8f0;
-            font-size: 1.1rem;
-        }
-        .section-title {
-            color: #0f172a;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0.5rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        .header-info {
-            background: #e2e8f0;
-            padding: 1rem;
-            border-radius: 6px;
-            font-weight: 500;
-            margin-bottom: 2rem;
-        }
+        body { background-color: #f8fafc; color: #1e293b; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .mathcad-container { max-width: 900px; margin: 2rem auto; background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-left: 8px solid #0f172a; }
+        .equation-block { background: #f1f5f9; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #e2e8f0; font-size: 1.1rem; overflow-x: auto; }
+        .section-title { color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600; }
+        .header-info { background: #e2e8f0; padding: 1rem; border-radius: 6px; font-weight: 500; margin-bottom: 2rem; }
     </style>
 </head>
 <body>
-
 <div class="mathcad-container">
     <h1 class="text-4xl font-bold mb-2 text-slate-900">InnoMux2 Design Equations</h1>
     <h2 class="text-xl text-slate-600 mb-6">True Physics Engine V5 Outputs</h2>
@@ -63,68 +28,58 @@
         <span><strong>Secondary Turns (NS):</strong> 5</span>
     </div>
 
-    <!-- Section 1 -->
-    <h3 class="text-2xl section-title">1. Total Output Power (\\(P_O\\))</h3>
+    <h3 class="text-2xl section-title">1. Total Output Power ($)</h3>
     <div class="equation-block">
-        \\[ P_O = (V_{OUT(CV1)} \\times I_{OUT(CV1)}) + (V_{OUT(CVHV)} \\times I_{OUT(CVHV)}) \\]
-        \\[ P_O = (20.00\\text{ V} \\times 0.100\\text{ A}) + (48.00\\text{ V} \\times 3.550\\text{ A}) = \\mathbf{172.40\\text{ W}} \\]
+         P_O = (V_{OUT(CV1)} \times I_{OUT(CV1)}) + (V_{OUT(CVHV)} \times I_{OUT(CVHV)}) 
+         P_O = (20.00\text{ V} \times 0.100\text{ A}) + (48.00\text{ V} \times 3.550\text{ A}) = \mathbf{172.40\text{ W}} 
     </div>
 
-    <!-- Section 2 -->
-    <h3 class="text-2xl section-title">2. Reflected Output Voltage (\\(V_{OR\\_CVHV}\\))</h3>
+    <h3 class="text-2xl section-title">2. Reflected Output Voltage ({OR\_CVHV}$)</h3>
     <div class="equation-block">
-        \\[ V_{OR\\_CVHV} = (V_{OUT(CVHV)} + V_{Diode}) \\times \\frac{N_P}{N_S} \\]
-        \\[ V_{OR\\_CVHV} = (48.0\\text{ V} + 1.0\\text{ V}) \\times \\frac{36}{5} = \\mathbf{352.8\\text{ V}} \\]
+         V_{OR\_CVHV} = (V_{OUT(CVHV)} + V_{Diode}) \times \frac{N_P}{N_S} 
+         V_{OR\_CVHV} = (48.0\text{ V} + 1.0\text{ V}) \times \frac{36}{5} = \mathbf{352.8\text{ V}} 
     </div>
 
-    <!-- Section 3 -->
-    <h3 class="text-2xl section-title">3. Minimum Peak Current Threshold (\\(I_{PEAK\\_MIN}\\))</h3>
+    <h3 class="text-2xl section-title">3. Minimum Peak Current Threshold ({PEAK\_MIN}$)</h3>
     <p class="text-slate-500 mb-2 italic">Hardware limit: IC cannot output a pulse smaller than 26.5% of its typical current limit.</p>
     <div class="equation-block">
-        \\[ I_{PEAK\\_MIN} = I_{LIMIT\\_TYP} \\times 0.265 \\]
-        \\[ I_{PEAK\\_MIN} = 3.75\\text{ A} \\times 0.265 = \\mathbf{0.994\\text{ A}} \\]
+         I_{PEAK\_MIN} = I_{LIMIT\_TYP} \times 0.265 
+         I_{PEAK\_MIN} = 3.75\text{ A} \times 0.265 = \mathbf{0.994\text{ A}} 
     </div>
 
-    <!-- Section 4 -->
-    <h3 class="text-2xl section-title">4. Minimum On-Time at No Load (\\(t_{ON\\_MIN\\_NL}\\))</h3>
+    <h3 class="text-2xl section-title">4. Minimum On-Time at No Load ({ON\_MIN\_NL}$)</h3>
     <div class="equation-block">
-        \\[ t_{ON\\_MIN\\_NL} = \\frac{L_{P\\_TYP} \\times I_{PEAK\\_MIN}}{V_{DC\\_MAX}} \\]
-        \\[ t_{ON\\_MIN\\_NL} = \\frac{456.8\\text{ \\mu H} \\times 0.994\\text{ A}}{860\\text{ V}} \\approx \\mathbf{0.528\\text{ \\mu s}} \\]
+         t_{ON\_MIN\_NL} = \frac{L_{P\_TYP} \times I_{PEAK\_MIN}}{V_{DC\_MAX}} 
+         t_{ON\_MIN\_NL} = \frac{456.8\text{ \mu H} \times 0.994\text{ A}}{860\text{ V}} \approx \mathbf{0.528\text{ \mu s}} 
     </div>
 
-    <!-- Section 5 -->
-    <h3 class="text-2xl section-title">5. Maximum Switch Drain Voltage (\\(V_{DRAIN\\_PEAK}\\))</h3>
-    <p class="text-slate-500 mb-2 italic">Engine assumes \\(V_{SPIKE} = 70.4\\text{ V}\\) based on transformer leakage inductance.</p>
+    <h3 class="text-2xl section-title">5. Maximum Switch Drain Voltage ({DRAIN\_PEAK}$)</h3>
+    <p class="text-slate-500 mb-2 italic">Engine assumes {SPIKE} = 70.4\text{ V}$ based on transformer leakage inductance.</p>
     <div class="equation-block">
-        \\[ V_{DRAIN\\_PEAK} = V_{DC\\_MAX} + V_{OR\\_CVHV} + V_{SPIKE} \\]
-        \\[ V_{DRAIN\\_PEAK} = 860\\text{ V} + 352.8\\text{ V} + 70.4\\text{ V} = \\mathbf{1283.2\\text{ V}} \\]
+         V_{DRAIN\_PEAK} = V_{DC\_MAX} + V_{OR\_CVHV} + V_{SPIKE} 
+         V_{DRAIN\_PEAK} = 860\text{ V} + 352.8\text{ V} + 70.4\text{ V} = \mathbf{1283.2\text{ V}} 
     </div>
 
-    <!-- Section 6 -->
-    <h3 class="text-2xl section-title">6. Synchronous Rectifier Peak Reverse Voltage (\\(SR\\_PRV\\))</h3>
+    <h3 class="text-2xl section-title">6. Synchronous Rectifier Peak Reverse Voltage (\_PRV$)</h3>
     <p class="text-slate-500 mb-2 italic">For InnoMux2 single-winding, the SR diode sees the CV1 baseline voltage.</p>
     <div class="equation-block">
-        \\[ SR\\_PRV = V_{OUT(CV1)} + \\left( V_{DC\\_MAX} \\times \\frac{N_S}{N_P} \\right) \\]
-        \\[ SR\\_PRV = 20.0\\text{ V} + \\left( 860\\text{ V} \\times \\frac{5}{36} \\right) = \\mathbf{139.4\\text{ V}} \\]
+         SR\_PRV = V_{OUT(CV1)} + \left( V_{DC\_MAX} \times \frac{N_S}{N_P} \right) 
+         SR\_PRV = 20.0\text{ V} + \left( 860\text{ V} \times \frac{5}{36} \right) = \mathbf{139.4\text{ V}} 
     </div>
 
-    <!-- Section 7 -->
-    <h3 class="text-2xl section-title">7. Operating Flux Density (\\(B_{MAX}\\))</h3>
-    <p class="text-slate-500 mb-2 italic">Engine accounts for magnetic fringing flux with \\(F_{FRINGE} \\approx 1.06\\).</p>
+    <h3 class="text-2xl section-title">7. Operating Flux Density ({MAX}$)</h3>
+    <p class="text-slate-500 mb-2 italic">Engine accounts for magnetic fringing flux with {FRINGE} \approx 1.06$.</p>
     <div class="equation-block">
-        \\[ B_{MAX} = \\left( \\frac{L_{P\\_TYP} \\times I_{LIMIT\\_TYP}}{N_P \\times A_E} \\right) \\times F_{FRINGE} \\]
-        \\[ B_{MAX} = \\left( \\frac{456.8\\text{ \\mu H} \\times 3.750\\text{ A}}{36 \\times 169.0\\text{ mm}^2} \\right) \\times 10^4 \\times 1.06 \\approx \\mathbf{2985\\text{ Gauss}} \\]
+         B_{MAX} = \left( \frac{L_{P\_TYP} \times I_{LIMIT\_TYP}}{N_P \times A_E} \right) \times F_{FRINGE} 
+         B_{MAX} = \left( \frac{456.8\text{ \mu H} \times 3.750\text{ A}}{36 \times 169.0\text{ mm}^2} \right) \times 10^4 \times 1.06 \approx \mathbf{2985\text{ Gauss}} 
     </div>
 
-    <!-- Section 8 -->
-    <h3 class="text-2xl section-title">8. Peak Flux Density (\\(B_{PK}\\))</h3>
+    <h3 class="text-2xl section-title">8. Peak Flux Density ({PK}$)</h3>
     <p class="text-slate-500 mb-2 italic">Worst-case startup/fault condition using maximum tolerance limits.</p>
     <div class="equation-block">
-        \\[ B_{PK} = \\left( \\frac{L_{P\\_MAX} \\times I_{LIMIT\\_MAX}}{N_P \\times A_E} \\right) \\times F_{FRINGE} \\]
-        \\[ B_{PK} = \\left( \\frac{479.7\\text{ \\mu H} \\times 4.013\\text{ A}}{36 \\times 169.0\\text{ mm}^2} \\right) \\times 10^4 \\times 1.06 \\approx \\mathbf{3354\\text{ Gauss}} \\]
+         B_{PK} = \left( \frac{L_{P\_MAX} \times I_{LIMIT\_MAX}}{N_P \times A_E} \right) \times F_{FRINGE} 
+         B_{PK} = \left( \frac{479.7\text{ \mu H} \times 4.013\text{ A}}{36 \times 169.0\text{ mm}^2} \right) \times 10^4 \times 1.06 \approx \mathbf{3354\text{ Gauss}} 
     </div>
-
 </div>
-
 </body>
 </html>
