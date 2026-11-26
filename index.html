@@ -3,233 +3,122 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Charles Cayno | Flight Deck</title>
-<meta name="description" content="Charles Cayno's personal cockpit of web tools and projects." />
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" />
+<title>Charles Cayno</title>
+<meta name="description" content="Charles Cayno's personal tools and projects." />
 <style>
-  :root { --amber:#ffb000; --green:#39ff88; --cyan:#4de1ff; --red:#ff4d4d; }
+  :root { --fg:#fff; --mute:#8a8d91; --line:rgba(255,255,255,.18); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
   body {
-    font-family: "Share Tech Mono", monospace;
+    background:#000; color:var(--fg);
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  a { color:inherit; text-decoration:none; }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:10;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 40px; background:linear-gradient(#000a,transparent);
+    font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+  }
+  nav .brand { font-weight:700; letter-spacing:.35em; }
+  nav a.link { color:var(--mute); transition:color .2s; }
+  nav a.link:hover { color:#fff; }
+
+  .hero {
+    min-height:100vh; display:flex; flex-direction:column; justify-content:flex-end;
+    padding:0 40px 80px;
     background:
-      radial-gradient(ellipse at 50% 0%, #1b2430 0%, #0b0f14 60%),
-      #0b0f14;
-    color:#cfe3ff;
+      linear-gradient(180deg,rgba(0,0,0,.2),#000 95%),
+      radial-gradient(ellipse at 70% 30%,#1c232b 0%,#000 65%);
   }
-  body::before { /* subtle scanlines */
-    content:""; position:fixed; inset:0; pointer-events:none; z-index:50;
-    background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);
+  .hero h1 {
+    font-size:clamp(40px,8vw,104px); font-weight:700; line-height:1;
+    letter-spacing:.06em; text-transform:uppercase;
   }
-  .orb { font-family:"Orbitron",sans-serif; }
-  .material-symbols-outlined { font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24; }
+  .hero p { margin-top:20px; color:var(--mute); font-size:14px; letter-spacing:.2em; text-transform:uppercase; }
+  .cta {
+    display:inline-block; margin-top:36px; padding:14px 34px;
+    border:1px solid var(--fg); font-size:12px; letter-spacing:.25em; text-transform:uppercase;
+    transition:background .25s,color .25s;
+  }
+  .cta:hover { background:#fff; color:#000; }
 
-  .panel {
-    position:relative; border-radius:18px;
-    background:linear-gradient(160deg,#1a222d,#10151c 70%);
-    border:1px solid #2a3544;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 40px rgba(0,0,0,.6), 0 20px 40px rgba(0,0,0,.5);
-  }
-  .screw {
-    position:absolute; width:10px; height:10px; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%,#8b97a8,#2b3340 70%);
-    box-shadow:0 0 0 1px #0008;
-  }
-  .screw::after{content:"";position:absolute;left:1px;right:1px;top:4px;height:1.5px;background:#111;transform:rotate(35deg)}
-  .tl{top:8px;left:8px}.tr{top:8px;right:8px}.bl{bottom:8px;left:8px}.br{bottom:8px;right:8px}
+  section { padding:100px 40px; max-width:1200px; margin:0 auto; }
+  .label { font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:var(--mute); margin-bottom:40px; }
 
-  .lcd {
-    background:#050a07; border:1px solid #1d3326; border-radius:8px;
-    color:var(--green); text-shadow:0 0 8px rgba(57,255,136,.7);
-    box-shadow:inset 0 0 18px rgba(0,0,0,.9);
+  .row {
+    display:grid; grid-template-columns:60px 1fr 1fr 40px; gap:20px; align-items:center;
+    padding:26px 0; border-top:1px solid var(--line); transition:padding .25s, background .25s;
   }
-  .led { width:9px;height:9px;border-radius:50%;background:var(--green);
-    box-shadow:0 0 8px var(--green),0 0 2px #fff inset; animation:blink 2.4s infinite; }
-  .led.amber{background:var(--amber);box-shadow:0 0 8px var(--amber)}
-  @keyframes blink{0%,85%,100%{opacity:1}92%{opacity:.25}}
+  .row:last-child { border-bottom:1px solid var(--line); }
+  .row:hover { padding-left:14px; background:rgba(255,255,255,.04); }
+  .row .n { color:var(--mute); font-size:12px; letter-spacing:.2em; }
+  .row .t { font-size:18px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; }
+  .row .d { color:var(--mute); font-size:14px; }
+  .row .a { text-align:right; opacity:0; transition:opacity .25s; }
+  .row:hover .a { opacity:1; }
 
-  .btn {
-    display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:12px;
-    background:linear-gradient(180deg,#252f3d,#151b24);
-    border:1px solid #344256; text-decoration:none; color:#e6f0ff;
-    box-shadow:0 4px 0 #0a0d12, 0 8px 14px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
-    transition:transform .08s, box-shadow .08s, border-color .2s;
+  footer {
+    border-top:1px solid var(--line); padding:32px 40px; display:flex; justify-content:space-between;
+    font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute);
   }
-  .btn:hover { border-color:var(--amber); }
-  .btn:hover .ico { color:var(--amber); text-shadow:0 0 10px var(--amber); }
-  .btn:hover .led { background:var(--amber); box-shadow:0 0 10px var(--amber); }
-  .btn:active { transform:translateY(3px); box-shadow:0 1px 0 #0a0d12, inset 0 2px 6px rgba(0,0,0,.6); }
-  .ico {
-    width:46px;height:46px;flex:none;display:grid;place-items:center;border-radius:50%;
-    background:radial-gradient(circle at 50% 35%,#0e1a14,#05090a);
-    border:2px solid #3a4658; color:var(--green); font-size:26px;
-    box-shadow:inset 0 0 10px #000; transition:.2s;
-  }
-  .tag { font-size:10px; letter-spacing:.2em; color:#7f93ad; }
+  footer a:hover { color:#fff; }
 
-  .gauge { width:100%; max-width:130px; }
-  .needle { transform-origin:60px 60px; transition:transform 1.4s cubic-bezier(.2,1.4,.4,1); }
-  .horizon { overflow:hidden; border-radius:50%; border:4px solid #3a4658; box-shadow:inset 0 0 14px #000; }
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media (max-width:700px){
+    nav,.hero,section,footer{padding-left:20px;padding-right:20px}
+    .row{grid-template-columns:36px 1fr 24px}
+    .row .d{grid-column:2/3;grid-row:2}
+    .row .a{opacity:1;grid-row:1;grid-column:3}
+  }
 </style>
 </head>
-<body class="min-h-screen antialiased px-4 sm:px-6 py-8">
-<main class="max-w-5xl mx-auto space-y-6">
+<body>
+<nav>
+  <a class="brand" href="#">Cayno</a>
+  <div style="display:flex;gap:32px">
+    <a class="link" href="#projects">Projects</a>
+    <a class="link" href="/resume/">Resume</a>
+    <a class="link" href="https://github.com/charlescayno">GitHub</a>
+  </div>
+</nav>
 
-  <!-- Top instrument strip -->
-  <header class="panel p-5 sm:p-6">
-    <span class="screw tl"></span><span class="screw tr"></span><span class="screw bl"></span><span class="screw br"></span>
-    <div class="flex flex-col md:flex-row md:items-center gap-5 justify-between">
-      <div>
-        <p class="tag">PRIMARY FLIGHT DISPLAY // CALLSIGN CAYNO-01</p>
-        <h1 class="orb text-3xl sm:text-5xl font-black tracking-wider text-white mt-1">
-          CHARLES<span class="text-[var(--amber)]"> CAYNO</span>
-        </h1>
-        <p class="text-[#8aa0bd] mt-1">Personal flight deck &mdash; tools, trackers &amp; engineering calculators</p>
-      </div>
-      <div class="flex items-center gap-4">
-        <!-- Attitude indicator -->
-        <svg id="horizon" class="horizon" width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
-          <g id="hz">
-            <rect x="-40" y="-40" width="176" height="88" fill="#2a79c9"/>
-            <rect x="-40" y="48" width="176" height="88" fill="#7a4a1d"/>
-            <line x1="-40" y1="48" x2="136" y2="48" stroke="#fff" stroke-width="2"/>
-            <g stroke="#fff" stroke-width="1.2"><line x1="38" y1="36" x2="58" y2="36"/><line x1="42" y1="24" x2="54" y2="24"/><line x1="38" y1="60" x2="58" y2="60"/><line x1="42" y1="72" x2="54" y2="72"/></g>
-          </g>
-          <path d="M20 50h20l6 6 6-6h20" fill="none" stroke="var(--amber)" stroke-width="3"/>
-          <circle cx="48" cy="48" r="2.5" fill="var(--amber)"/>
-        </svg>
-        <div class="lcd px-4 py-3 text-right">
-          <div class="text-[10px] tracking-widest opacity-70">ZULU / LOCAL</div>
-          <div id="clock" class="orb text-2xl">--:--:--</div>
-          <div id="date" class="text-xs opacity-80">---</div>
-        </div>
-      </div>
-    </div>
-  </header>
+<header class="hero">
+  <h1>Charles<br>Cayno</h1>
+  <p>Tools &amp; Projects</p>
+  <div><a class="cta" href="#projects">View Projects</a></div>
+</header>
 
-  <!-- Status row -->
-  <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <div class="panel p-4 flex flex-col items-center">
-      <span class="screw tl"></span><span class="screw tr"></span>
-      <svg class="gauge" viewBox="0 0 120 120" aria-hidden="true">
-        <circle cx="60" cy="60" r="54" fill="#05090a" stroke="#3a4658" stroke-width="4"/>
-        <g id="ticks" stroke="#8aa0bd" stroke-width="2"></g>
-        <path d="M22 98 A54 54 0 1 1 98 98" fill="none" stroke="var(--green)" stroke-width="3" opacity=".5"/>
-        <g class="needle" id="needle1"><line x1="60" y1="60" x2="60" y2="18" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/></g>
-        <circle cx="60" cy="60" r="5" fill="#333"/>
-      </svg>
-      <div class="tag mt-1">SYSTEMS</div>
-      <div class="orb text-lg text-[var(--green)]" id="g1">0</div>
-    </div>
-    <div class="panel p-4 flex flex-col items-center justify-center text-center">
-      <span class="screw tl"></span><span class="screw tr"></span>
-      <div class="tag">ANNUNCIATOR</div>
-      <div class="grid grid-cols-2 gap-2 mt-3 w-full text-[11px]">
-        <div class="lcd py-1">ALL SYS</div><div class="lcd py-1">NOMINAL</div>
-        <div class="lcd py-1" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">AUTOPILOT</div>
-        <div class="lcd py-1">GEAR UP</div>
-      </div>
-    </div>
-    <div class="panel p-4 flex flex-col items-center justify-center text-center">
-      <span class="screw tl"></span><span class="screw tr"></span>
-      <div class="tag">ALTITUDE</div>
-      <div class="lcd px-3 py-2 mt-2 orb text-2xl" id="alt">00000 FT</div>
-      <div class="tag mt-2">HDG</div>
-      <div class="lcd px-3 py-1 mt-1 orb" id="hdg">000°</div>
-    </div>
-    <div class="panel p-4 flex flex-col items-center justify-center text-center">
-      <span class="screw tl"></span><span class="screw tr"></span>
-      <div class="tag">FUEL / STATUS</div>
-      <div class="w-full h-3 rounded bg-black mt-3 border border-[#2a3544] overflow-hidden">
-        <div id="fuelbar" class="h-full" style="width:0;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));transition:width 1.6s ease"></div>
-      </div>
-      <div class="orb text-sm mt-2 text-[var(--green)]">FULL</div>
-      <div class="flex gap-2 mt-3"><span class="led"></span><span class="led amber"></span><span class="led"></span></div>
-    </div>
-  </section>
+<section id="projects">
+  <div class="label">Projects</div>
+  <div id="list"></div>
+</section>
 
-  <!-- Control panel -->
-  <section class="panel p-5 sm:p-6">
-    <span class="screw tl"></span><span class="screw tr"></span><span class="screw bl"></span><span class="screw br"></span>
-    <div class="flex items-center justify-between mb-4 px-1">
-      <h2 class="orb text-sm tracking-[.3em] text-[var(--amber)]">MASTER CONTROL PANEL</h2>
-      <span class="tag"><span id="count">0</span> SYSTEMS ONLINE</span>
-    </div>
-    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </section>
-
-  <footer class="text-center tag pb-6">
-    CLEARED FOR TAKEOFF &bull; &copy; <span id="yr"></span> CHARLES CAYNO &bull;
-    <a class="underline hover:text-[var(--amber)]" href="https://github.com/charlescayno">GITHUB</a>
-  </footer>
-</main>
+<footer>
+  <span>&copy; <span id="yr"></span> Charles Cayno</span>
+  <a href="https://github.com/charlescayno">GitHub</a>
+</footer>
 
 <script>
-  const systems = [
-    ["BP Log","Blood pressure tracker.","monitor_heart","/bp-log/","VITALS"],
-    ["Wedding Guestlist","Manage wedding guests.","diversity_1","/wedding-guestlist/","EVENTS"],
-    ["Magnetics Designer","Design and calculate magnetics.","transform","/magnetics-designer/magnetics-designer.html","ENGINEERING"],
-    ["Bybit Futures Calculator","Calculate Bybit futures.","candlestick_chart","/bybit-futures-calculator/","FINANCE"],
-    ["Fuel Tracker","Track your fuel consumption.","local_gas_station","/fuel-tracker/","VEHICLE"],
-    ["GLC Inventory","Inventory management.","inventory_2","/glc-inventory/","OPERATIONS"],
-    ["Headshot Cropper","Image cropping tool.","crop","/headshot-cropper/","UTILITY"],
-    ["Innomux2 Calculator","Innomux2 tool.","developer_board","/innomux2-calculator/","ENGINEERING"],
-    ["Moneyku","Finance tracking app.","payments","/moneyku/","FINANCE"],
-    ["Volunteer Management","Manage volunteer schedules.","diversity_3","/volunteer-management/monitor.html","EVENTS"],
-    ["Task Journal","Bullet journal task manager with calendar views.","event_note","/task-journal/","PLANNING"],
-    ["GLC PR Encoder","Encode Provisional Receipts (PR).","receipt_long","/glc-pr-encoder/","OPERATIONS"],
-    ["Resume","My professional resume.","description","/resume/","CREW FILE"]
+  const items = [
+    ["BP Log","Blood pressure tracker.","/bp-log/"],
+    ["Wedding Guestlist","Manage wedding guests.","/wedding-guestlist/"],
+    ["Magnetics Designer","Design and calculate magnetics.","/magnetics-designer/magnetics-designer.html"],
+    ["Bybit Futures Calculator","Calculate Bybit futures.","/bybit-futures-calculator/"],
+    ["Fuel Tracker","Track your fuel consumption.","/fuel-tracker/"],
+    ["GLC Inventory","Inventory management.","/glc-inventory/"],
+    ["Headshot Cropper","Image cropping tool.","/headshot-cropper/"],
+    ["Innomux2 Calculator","Innomux2 tool.","/innomux2-calculator/"],
+    ["Moneyku","Finance tracking app.","/moneyku/"],
+    ["Volunteer Management","Manage volunteer schedules.","/volunteer-management/monitor.html"],
+    ["Task Journal","Bullet journal task manager with calendar views.","/task-journal/"],
+    ["GLC PR Encoder","Encode Provisional Receipts (PR).","/glc-pr-encoder/"],
+    ["Resume","My professional resume.","/resume/"]
   ];
-  const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
-  document.getElementById("grid").innerHTML = systems.map(([n,d,i,h,t],k)=>`
-    <a class="btn" href="${h}">
-      <span class="ico material-symbols-outlined">${i}</span>
-      <span class="flex-1 min-w-0">
-        <span class="tag block">${t} &bull; SYS-${String(k+1).padStart(2,"0")}</span>
-        <span class="orb block text-sm font-bold text-white truncate">${esc(n)}</span>
-        <span class="block text-xs text-[#8aa0bd]">${esc(d)}</span>
-      </span>
-      <span class="led"></span>
-    </a>`).join("");
-
-  // Gauge ticks
-  const ticks = document.getElementById("ticks");
-  for (let a=-135;a<=135;a+=27){
-    const r=a*Math.PI/180, x1=60+Math.sin(r)*46, y1=60-Math.cos(r)*46, x2=60+Math.sin(r)*52, y2=60-Math.cos(r)*52;
-    ticks.insertAdjacentHTML("beforeend",`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`);
-  }
-
-  // Clock
-  const tick=()=>{
-    const d=new Date();
-    document.getElementById("clock").textContent=d.toLocaleTimeString("en-GB");
-    document.getElementById("date").textContent=d.toUTCString().slice(0,16).toUpperCase()+" • UTC"+(-d.getTimezoneOffset()/60>=0?"+":"")+(-d.getTimezoneOffset()/60);
-  };
-  tick(); setInterval(tick,1000);
-  document.getElementById("yr").textContent=new Date().getFullYear();
-  document.getElementById("count").textContent=systems.length;
-
-  // Animated gauges
-  const n=systems.length;
-  setTimeout(()=>{
-    document.getElementById("needle1").style.transform="rotate(100deg)";
-    document.getElementById("fuelbar").style.width="92%";
-  },200);
-  let c=0; const g1=document.getElementById("g1");
-  const t=setInterval(()=>{ g1.textContent=++c; if(c>=n) clearInterval(t); },80);
-
-  // Altitude / heading / horizon drift
-  let alt=0, target=35000;
-  const altEl=document.getElementById("alt"), hdgEl=document.getElementById("hdg"), hz=document.getElementById("hz");
-  setInterval(()=>{
-    alt+=Math.max(1,Math.round((target-alt)*.06));
-    if(alt>target) alt=target;
-    altEl.textContent=String(alt).padStart(5,"0")+" FT";
-    const tt=Date.now()/1000;
-    hdgEl.textContent=String(Math.round((tt*3)%360)).padStart(3,"0")+"°";
-    hz.setAttribute("transform",`rotate(${Math.sin(tt/2)*6} 48 48) translate(0 ${Math.sin(tt/3)*3})`);
-  },60);
+  document.getElementById("list").innerHTML = items.map(([t,d,h],i)=>
+    `<a class="row" href="${h}"><span class="n">${String(i+1).padStart(2,"0")}</span><span class="t">${t}</span><span class="d">${d}</span><span class="a">&rarr;</span></a>`
+  ).join("");
+  document.getElementById("yr").textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
